@@ -1,0 +1,72 @@
+---
+title: "Arbeidskrav 3 - regresjonsanalyse"
+author: "Merete Sustad Lien"
+date: "10.05.2026"
+execute: 
+  warning: false
+  message: false
+  echo: false
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Arbeidskrav 3
+
+Oppgave 1.1:
+
+En kontinuerlig variabel baserer seg på målinger vi gjør, slik som for eksmpel tid, avstand eller temperatur, der verdiene ligger på en kontinuerlig skala og kan ta en hvilken som helst verdi innenfor et gitt intervall. Kontinuerlige variabler kan gi høy presjon på grunn av sin evne til å bruke uendelig antall desimaler (Spiegelhalter, 2019, s. 46).
+
+Når man undersøker sammenhengen mellom to kontinuerlige variabler i en regresjonsmodell, så bruker man oftest det som kalles enkel lineær regresjon. Med enkel lineær regresjon så handler det om å finne en rett linje som passer best til et sett med punkter, der residualene (avviket mellom det observerte og det forventede) blir minst mulig. Enkel lineær regresjon bruker en uavhengig variabel (x) til å forutsi eller forklare en avhengig variabel (y). Forholdet mellom variablene uttrykkes gjennom den matematiske formelen:
+
+Y~i~  = b~0~ + b~1~X~i~
+
+Analysen under er et praktisk eksempel på en regresjonsmodell og tar utgangspunkt i datasettet *hypertrophy*, en studie gjort av Haun et al. fra 2019.  Analysen forsøker å se sammenhengen mellom en utøvers prosentandel av type II-muskelfibre ved oppstart (PERCENT_TYPE_II_T1) og tykkelsen på vastus lateralis etter 6 uker med trening (VL_T3).
+
+Analysen i R ga følgende estimerte regresjonsformel:
+
+Muskeltykkelse (y) = 2.81 + 0.0058 \* (prosentandel type II-fibre).
+
+I eksempelet over er Pearsons korrelasjonskoeffisient funnet til å være 0.19, som gir en beskrivelse på styrken og retningen av den lineære sammenhengen. Tallet er nærme 0 og står skrevet med positivt fortegn, det vil si at det kun er en svak positiv korrelasjon mellom variablene. Dersom man ønsker å se den faktiske effekten som muskelfibertype har på muskeltykkelse etter en treningsintervensjon, må man se på regresjonsestimatet. Regresjonsestimatet forsøker å forklare forholdet mellom to variabler, og sier noe om hvor stor endring man får i gjennomsnitt i y når x endrer seg med 1 enhet (Spiegelhalter, 2019, s. 126). Regresjonsestimatet, det vil si stigningstallet, er her 0.0058. Det betyr at for hvert prosentpoeng høyere andel av type II-muskelfibre en utøver har ved oppstart, er det er forventet økning i gjennomsnitt med 0.0058 cm tykkelse av vastus lateralis. Skjæringspunktet (b~0~ = 2.81) sier noe om muskeltykkelse i tilfelle x = 0, det vil si 0% type II-muskelfibre. Siden alle mennesker biologisk sett aldri har 0% type II-muskelfibre, blir dette bare en matematisk konstant for å plassere linjen i diagrammet og ikke en reell fysiologisk verdi.
+
+Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som ikke tar hensyn til enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter.
+
+```{r}
+#Last inn nødvendige pakker
+library(exscidata)
+library(tidyverse)
+library(ggplot2)
+
+#Definer og hent inn datasett
+tabell <- hypertrophy
+
+#kjør regresjonsmodellen
+modell_1 <- lm(VL_T3 ~ PERCENT_TYPE_II_T1, data = hypertrophy)
+
+#vis fullt statistisk sammendrag av modellen
+#summary(modell_1)
+
+#Skriv ut koeffisienter
+b0 <- coef(modell_1)[1] #Skjæringspunkt (intercept)
+b1 <- coef(modell_1)[2] #Regresjonsestimat (stigningstallet)
+
+#Skriv ut korrelasjonskoeffisienten
+cor(hypertrophy$PERCENT_TYPE_II_T1, hypertrophy$VL_T3, use = "complete.obs")
+
+#generer spredningsdiagram med regresjonslinje og tekst
+ggplot(hypertrophy, aes(PERCENT_TYPE_II_T1, VL_T3)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(title = "Regresjonsmodell: Muskeltykkelse basert på type II-muskelfibre",
+       subtitle = "Data fra Haun et al. (2019)",
+       x = "Type II-muskelfibre ved T1 (%)",
+       y = "Muskeltykkelse vastus lateralis etter 6 uker (cm)") + 
+  
+  annotate(
+    "text",
+    label = paste0("y = ", round(b0, 2), " + ", round(b1, 4), " * x"),
+    x = 50, y = 4.2)
+```
+
+Oppgave 1.2
