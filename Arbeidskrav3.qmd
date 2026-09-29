@@ -145,4 +145,77 @@ Av analysen får vi et rå-estimat på 0.04387. Rå-estimatet oppgis i log-odds,
 
 Siden den avhengige variabelen er binær (0 eller 1), kan vi ikke bruke en vanlig rett linje. Link-funksjon (logit) gjør om den rette linjen til en S-kurve, slik at modellen alltid holder seg innenfor 0% og 100%. Dette er viktig for at modellen ikke skal produsere tall som ikke gir biologisk eller statistisk mening i form av umulige sannsynligheter.
 
-Figuren viser at gruppen med «high-responders» generelt har en høyere prosentandel type II-muskelfibre ved oppstart.  
+Figuren viser at gruppen med «high-responders» generelt har en høyere prosentandel type II-muskelfibre ved oppstart.
+
+Oppgave 2.1
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(exscidata)
+
+strengthvolume <- exscidata::strengthvolume |> 
+  filter(exercise %in% c("legpress", "legext")) |> 
+  pivot_wider(names_from = exercise, values_from = load)
+
+pred_mod <- lm(legext ~ legpress, data = strengthvolume)
+
+coef(pred_mod)
+
+ggplot(strengthvolume, aes(legpress, legext)) +
+  geom_point(alpha = 0.5) +                  
+  geom_smooth(method = "lm", se = FALSE) +   
+  theme_classic()
+
+```
+
+Oppgave 2.2.
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(exscidata)
+
+strengthvolume_filt <- exscidata::strengthvolume |> 
+  filter(exercise %in% c("legpress", "legext")) |> 
+  filter(time == "post", sets == "single") |>
+  pivot_wider(names_from = exercise, values_from = load)
+
+pred_mod_2 <- lm(legext ~ legpress, data = strengthvolume_filt)
+pval_2 <- round(coef(summary(pred_mod))[2, 4], 5)
+
+ggplot(strengthvolume_filt, aes(legpress, legext)) +
+  geom_point(alpha = 0.5) +                  
+  geom_smooth(method = "lm", se = FALSE) +   
+  theme_classic()
+
+coef(pred_mod_2)
+```
+
+Oppgave 2.3
+
+```{r}
+library(exscidata)
+library(tidyverse)
+library(ggplot2)
+
+strengthvolume_filt_2 <- exscidata::strengthvolume |> 
+  filter(exercise %in% c("legpress", "legext")) |> 
+  pivot_wider(names_from = exercise, values_from = load)
+
+pred_mod_3 <- lm(legext ~ legpress + sex, data = strengthvolume_filt_2)
+pval_3 <- round(coef(summary(pred_mod_3))[2, 4], 5)
+
+coef(pred_mod_3)
+
+ggplot(strengthvolume_filt_2, aes(legpress, legext, colour = sex)) +
+  geom_point(alpha = 0.5) +                  
+  geom_smooth(method = "lm", se = FALSE) +   
+  theme_classic()
+```
+
+Oppgave 2.4.
+
+```{r}
+predict(pred_mod, newdata = data.frame(legpress = 250), interval = "prediction")
+```
