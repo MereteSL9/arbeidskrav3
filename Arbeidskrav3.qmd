@@ -70,3 +70,79 @@ ggplot(hypertrophy, aes(PERCENT_TYPE_II_T1, VL_T3)) +
 ```
 
 Oppgave 1.2
+
+En kategorisk variabel defineres som en variabel som kan deles inn i to eller flere distinkte grupper eller kategorier (Spiegelhalter, 2019, s. 27). Typiske eksempler på slike variabler kan være kjønn, farger eller ulike typer kosttilskudd brukt i forskning på treningseffekt, i likhet med det som er gjort i *hypertrophy.*
+
+Statistikkprogram klarer ikke å regne med merkelapper eller tekst, og er derfor avhengig å omgjøre fra tekst til tall. Når man inkluderer en kategorisk variabel i en regresjonsmodell, tar man i bruk dummyvariabler. Det vil si at programmet tilegner den ene gruppen verdien 0 (referansegruppe) og den andre gruppen verdien 1 (sammenligningsgruppe). Regresjonsmodellen vil følge samme matematiske formel som i oppgave 1.1 med Yi som muskeltykkelse av vastus lateralis, b~0~ som modellens skjæringspunkt), b~1~ som regresjonsestimatet og X~i~ som dummyvariabelen. b~0~ vil med andre ord være referansegruppens gjennomsnittlige muskeltykkelse av vastus lateralis etter 6 uker treningsintervensjon.
+
+Y~i~  = b~0~ + b~1~X~i~
+
+Et praktisk eksempel på dette er sammenhengen mellom den kontinuerlige avhengige variabelen «muskeltykkelse på vastus lateralis etter 6 uker» (VL_T3) og den kategoriske uavhengige variabelen «kosttilskudd» (GROUP) i datasettet *hypertrophy*, hvor dataene er filtrert til å kun omhandle karbohydratgruppen (MALTO) og proteingruppen (WP).
+
+```{r}
+library(exscidata)
+library(ggplot2)
+library(tidyverse)
+
+filtrert_data <- hypertrophy |> 
+  filter(GROUP %in% c("MALTO", "WP"))
+
+modell_2 <- lm(VL_T3 ~ GROUP, data = filtrert_data)
+
+b0_2 <- coef(modell_2)[1]
+b1_2 <- coef(modell_2)[2]
+
+ggplot(filtrert_data, aes(GROUP, VL_T3)) + 
+  geom_jitter(width = 0.1) +
+  geom_smooth(method = "lm", aes(group = 1), colour = "red", se = FALSE, linewidth = 1.2) +
+  
+  labs(
+    title = "Regresjonsmodell: Muskeltykkelse med utgangspunkt i kosttilskudd",
+    x = "Kosttilskudd (MALTO = 0, WP = 1)",
+    y = "Muskeltykkelse vastus lateralis etter 6 uker (cm)") + 
+  
+  theme_minimal()
+```
+
+Analysen i R ga følgende estimerte regresjonsformel:
+
+                Muskeltykkelse (y~i~) = 3.2310 – 0.1250 \* (dummyvariabel)
+
+Dummyvariabelen for referansegruppen (MALTO) = 0. Det vil si at skjæringspunktet (B0) er den gjennomsnittlige muskeltykkelsen for referansegruppen. Så analysen over forteller oss at utøverne som brukte karbohydrater hadde en gjennomsnittlig muskeltykkelse på 3.23 cm etter treningsperioden. Det negative regresjonsestimatet på -0.1250 forteller oss at utøverne som brukte proteinpulver (WP) hadde i gjennomsnitt 0.125 cm mindre muskeltykkelse enn utøverne i referansegruppen.
+
+Oppgave 1.3
+
+Vanlig lineær regresjon tar utgangspunkt i at dataene følger en normalfordeling. I et tilfelle hvor den avhengige variabelen er enten 0 eller 1, er man over på det som omtales som binomialfordeling hvor man kun har to mulige utfall. Da tar man i bruk en generalisert lineær modell, som åpner muligheten for å gjøre analyser på data som ikke er normalfordelt.
+
+Datasettet *hypertrophy* er tatt i bruk for å visualisere dette og spørsmålet som ble stilt var: «Kan vi bruke type II muskelfiber hos utøverne ved oppstart for å forutsi om utøverne får god (HIGH) eller dårlig (LOW) respons med tanke på muskelvekst etter treningsintervensjon?».
+
+```{r}
+library(exscidata)
+library(tidyverse)
+library(ggplot2)
+
+dat_hypertrophy <- exscidata::hypertrophy |> 
+  drop_na(CLUSTER) |> 
+  mutate(CLUSTER = ifelse(CLUSTER == "HIGH", 1, 0))
+
+modell_3 <- glm(CLUSTER ~ PERCENT_TYPE_II_T1, 
+                      data = dat_hypertrophy,
+                      family = binomial(link = "logit"))
+
+ggplot(dat_hypertrophy, aes(x = PERCENT_TYPE_II_T1, y = as.factor(CLUSTER))) +
+  geom_boxplot(width = 0.4) +
+  geom_point(colour = "red") + 
+  theme_classic() +
+  labs(x = "Prosentandel type II-muskelfibre ved start (T1)", 
+       y = "Gruppe (0 = Low, 1 = High)")
+
+summary(modell_3)
+
+exp(0.04387)
+```
+
+Av analysen får vi et rå-estimat på 0.04387. Rå-estimatet oppgis i log-odds, som gir lite mening når man forsøker å tolke det biologisk. Derfor regner vi dette rå-estimatet om til en odds-ratio (OR), som gir oss et forholdstall som viser prosentvis endring i odds. I eksempelet blir dette e^0.04387^ = 1.045. Dette forteller oss at sjansen for å bli en «high-responder» øker med 4.5% for hver enhet den uavhengige variabelen øker. I dette tilfellet hver 1% økning av andelen type II-muskelfiber hos utøveren ved oppstart. Effekten er ikke statistisk signifikant, vist ved p-verdi = 0.200, men det viser en naturlig tendens.
+
+Siden den avhengige variabelen er binær (0 eller 1), kan vi ikke bruke en vanlig rett linje. Link-funksjon (logit) gjør om den rette linjen til en S-kurve, slik at modellen alltid holder seg innenfor 0% og 100%. Dette er viktig for at modellen ikke skal produsere tall som ikke gir biologisk eller statistisk mening i form av umulige sannsynligheter.
+
+Figuren viser at gruppen med «high-responders» generelt har en høyere prosentandel type II-muskelfibre ved oppstart.  

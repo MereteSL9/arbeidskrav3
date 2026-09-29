@@ -85,14 +85,12 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="arbeidskrav-3" class="level2">
 <h2 class="anchored" data-anchor-id="arbeidskrav-3">Arbeidskrav 3</h2>
+<p>Oppgave 1.1:</p>
 <p>En kontinuerlig variabel baserer seg på målinger vi gjør, slik som for eksmpel tid, avstand eller temperatur, der verdiene ligger på en kontinuerlig skala og kan ta en hvilken som helst verdi innenfor et gitt intervall. Kontinuerlige variabler kan gi høy presjon på grunn av sin evne til å bruke uendelig antall desimaler (Spiegelhalter, 2019, s. 46).</p>
 <p>Når man undersøker sammenhengen mellom to kontinuerlige variabler i en regresjonsmodell, så bruker man oftest det som kalles enkel lineær regresjon. Med enkel lineær regresjon så handler det om å finne en rett linje som passer best til et sett med punkter, der residualene (avviket mellom det observerte og det forventede) blir minst mulig. Enkel lineær regresjon bruker en uavhengig variabel (x) til å forutsi eller forklare en avhengig variabel (y). Forholdet mellom variablene uttrykkes gjennom den matematiske formelen:</p>
 <p>Y<sub>i</sub> &nbsp;= b<sub>0</sub> + b<sub>1</sub>X<sub>i</sub></p>
 <p>Analysen under er et praktisk eksempel på en regresjonsmodell og tar utgangspunkt i datasettet <em>hypertrophy</em>, en studie gjort av Haun et al.&nbsp;fra 2019. &nbsp;Analysen forsøker å se sammenhengen mellom en utøvers prosentandel av type II-muskelfibre ved oppstart (PERCENT_TYPE_II_T1) og tykkelsen på vastus lateralis etter 6 uker med trening (VL_T3).</p>
 <p>Analysen i R ga følgende estimerte regresjonsformel:</p>
-<p>Muskeltykkelse (y) = 2.81 + 0.0058 * (prosentandel type II-fibre).</p>
-<p>I eksempelet over er Pearsons korrelasjonskoeffisient funnet til å være 0.19, som gir en beskrivelse på styrken og retningen av den lineære sammenhengen. Tallet er nærme 0 og står skrevet med positivt fortegn, det vil si at det kun er en svak positiv korrelasjon mellom variablene. Dersom man ønsker å se den faktiske effekten som muskelfibertype har på muskeltykkelse etter en treningsintervensjon, må man se på regresjonsestimatet. Regresjonsestimatet forsøker å forklare forholdet mellom to variabler, og sier noe om hvor stor endring man får i gjennomsnitt i y når x endrer seg med 1 enhet (Spiegelhalter, 2019, s. 126). Regresjonsestimatet, det vil si stigningstallet, er her 0.0058. Det betyr at for hvert prosentpoeng høyere andel av type II-muskelfibre en utøver har ved oppstart, er det er forventet økning i gjennomsnitt med 0.0058 cm tykkelse av vastus lateralis. Skjæringspunktet (b<sub>0</sub> = 2.81) sier noe om muskeltykkelse i tilfelle x = 0, det vil si 0% type II-muskelfibre. Siden alle mennesker biologisk sett aldri har 0% type II-muskelfibre, blir dette bare en matematisk konstant for å plassere linjen i diagrammet og ikke en reell fysiologisk verdi.</p>
-<p>Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som ikke tar hensyn til enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter. Analysen i R ga følgende estimerte regresjonsformel:</p>
 <p>Muskeltykkelse (y) = 2.81 + 0.0058 * (prosentandel type II-fibre).</p>
 <p>I eksempelet over er Pearsons korrelasjonskoeffisient funnet til å være 0.19, som gir en beskrivelse på styrken og retningen av den lineære sammenhengen. Tallet er nærme 0 og står skrevet med positivt fortegn, det vil si at det kun er en svak positiv korrelasjon mellom variablene. Dersom man ønsker å se den faktiske effekten som muskelfibertype har på muskeltykkelse etter en treningsintervensjon, må man se på regresjonsestimatet. Regresjonsestimatet forsøker å forklare forholdet mellom to variabler, og sier noe om hvor stor endring man får i gjennomsnitt i y når x endrer seg med 1 enhet (Spiegelhalter, 2019, s. 126). Regresjonsestimatet, det vil si stigningstallet, er her 0.0058. Det betyr at for hvert prosentpoeng høyere andel av type II-muskelfibre en utøver har ved oppstart, er det er forventet økning i gjennomsnitt med 0.0058 cm tykkelse av vastus lateralis. Skjæringspunktet (b<sub>0</sub> = 2.81) sier noe om muskeltykkelse i tilfelle x = 0, det vil si 0% type II-muskelfibre. Siden alle mennesker biologisk sett aldri har 0% type II-muskelfibre, blir dette bare en matematisk konstant for å plassere linjen i diagrammet og ikke en reell fysiologisk verdi.</p>
 <p>Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som ikke tar hensyn til enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter.</p>
@@ -108,6 +106,60 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Oppgave 1.2</p>
+<p>En kategorisk variabel defineres som en variabel som kan deles inn i to eller flere distinkte grupper eller kategorier (Spiegelhalter, 2019, s. 27). Typiske eksempler på slike variabler kan være kjønn, farger eller ulike typer kosttilskudd brukt i forskning på treningseffekt, i likhet med det som er gjort i <em>hypertrophy.</em></p>
+<p>Statistikkprogram klarer ikke å regne med merkelapper eller tekst, og er derfor avhengig å omgjøre fra tekst til tall. Når man inkluderer en kategorisk variabel i en regresjonsmodell, tar man i bruk dummyvariabler. Det vil si at programmet tilegner den ene gruppen verdien 0 (referansegruppe) og den andre gruppen verdien 1 (sammenligningsgruppe). Regresjonsmodellen vil følge samme matematiske formel som i oppgave 1.1 med Yi som muskeltykkelse av vastus lateralis, b<sub>0</sub> som modellens skjæringspunkt), b<sub>1</sub> som regresjonsestimatet og X<sub>i</sub> som dummyvariabelen. b<sub>0</sub> vil med andre ord være referansegruppens gjennomsnittlige muskeltykkelse av vastus lateralis etter 6 uker treningsintervensjon.</p>
+<p>Y<sub>i</sub> &nbsp;= b<sub>0</sub> + b<sub>1</sub>X<sub>i</sub></p>
+<p>Et praktisk eksempel på dette er sammenhengen mellom den kontinuerlige avhengige variabelen «muskeltykkelse på vastus lateralis etter 6 uker» (VL_T3) og den kategoriske uavhengige variabelen «kosttilskudd» (GROUP) i datasettet <em>hypertrophy</em>, hvor dataene er filtrert til å kun omhandle karbohydratgruppen (MALTO) og proteingruppen (WP).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Arbeidskrav3_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Analysen i R ga følgende estimerte regresjonsformel:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Muskeltykkelse (y<sub>i</sub>) = 3.2310 – 0.1250 * (dummyvariabel)</p>
+<p>Dummyvariabelen for referansegruppen (MALTO) = 0. Det vil si at skjæringspunktet (B0) er den gjennomsnittlige muskeltykkelsen for referansegruppen. Så analysen over forteller oss at utøverne som brukte karbohydrater hadde en gjennomsnittlig muskeltykkelse på 3.23 cm etter treningsperioden. Det negative regresjonsestimatet på -0.1250 forteller oss at utøverne som brukte proteinpulver (WP) hadde i gjennomsnitt 0.125 cm mindre muskeltykkelse enn utøverne i referansegruppen.</p>
+<p>Oppgave 1.3</p>
+<p>Vanlig lineær regresjon tar utgangspunkt i at dataene følger en normalfordeling. I et tilfelle hvor den avhengige variabelen er enten 0 eller 1, er man over på det som omtales som binomialfordeling hvor man kun har to mulige utfall. Da tar man i bruk en generalisert lineær modell, som åpner muligheten for å gjøre analyser på data som ikke er normalfordelt.</p>
+<p>Datasettet <em>hypertrophy</em> er tatt i bruk for å visualisere dette og spørsmålet som ble stilt var: «Kan vi bruke type II muskelfiber hos utøverne ved oppstart for å forutsi om utøverne får god (HIGH) eller dårlig (LOW) respons med tanke på muskelvekst etter treningsintervensjon?».</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Arbeidskrav3_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = CLUSTER ~ PERCENT_TYPE_II_T1, family = binomial(link = "logit"), 
+    data = dat_hypertrophy)
+
+Coefficients:
+                   Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)        -2.41257    1.95356  -1.235    0.217
+PERCENT_TYPE_II_T1  0.04387    0.03427   1.280    0.200
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 27.726  on 19  degrees of freedom
+Residual deviance: 25.817  on 18  degrees of freedom
+AIC: 29.817
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.044847</code></pre>
+</div>
+</div>
+<p>Av analysen får vi et rå-estimat på 0.04387. Rå-estimatet oppgis i log-odds, som gir lite mening når man forsøker å tolke det biologisk. Derfor regner vi dette rå-estimatet om til en odds-ratio (OR), som gir oss et forholdstall som viser prosentvis endring i odds. I eksempelet blir dette e<sup>0.04387</sup> = 1.045. Dette forteller oss at sjansen for å bli en «high-responder» øker med 4.5% for hver enhet den uavhengige variabelen øker. I dette tilfellet hver 1% økning av andelen type II-muskelfiber hos utøveren ved oppstart. Effekten er ikke statistisk signifikant, vist ved p-verdi = 0.200, men det viser en naturlig tendens.</p>
+<p>Siden den avhengige variabelen er binær (0 eller 1), kan vi ikke bruke en vanlig rett linje. Link-funksjon (logit) gjør om den rette linjen til en S-kurve, slik at modellen alltid holder seg innenfor 0% og 100%. Dette er viktig for at modellen ikke skal produsere tall som ikke gir biologisk eller statistisk mening i form av umulige sannsynligheter.</p>
+<p>Figuren viser at gruppen med «high-responders» generelt har en høyere prosentandel type II-muskelfibre ved oppstart. &nbsp;</p>
 </section>
 
 </main>
