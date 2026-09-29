@@ -219,3 +219,38 @@ Oppgave 2.4.
 ```{r}
 predict(pred_mod, newdata = data.frame(legpress = 250), interval = "prediction")
 ```
+
+Oppgave 3.1.
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(exscidata)
+
+# 1. Håndtering av data: Vi filtrerer på beinhev og regner ut endringen (post minus pre)
+dat_endring <- exscidata::strengthvolume |> 
+  filter(exercise == "legext") |> 
+  select(participant, sex, sets, time, load) |> 
+  pivot_wider(names_from = time, values_from = load) |> 
+  mutate(change = post - pre) # Regner ut forandringen i kilo for hver utøver
+
+# 2. Modell: Vi tester om treningsvolum (sets) kan forklare endringen i styrke
+modell_slutning <- lm(change ~ sets, data = dat_endring)
+
+# 3. Vis tabellen med resultatene
+summary(modell_slutning)
+
+coef(modell_slutning)
+
+ggplot(dat_endring, aes(x = sets, y = change)) +
+  # 1. Tegner boksene i bakgrunnen
+  geom_boxplot(width = 0.4, outlier.shape = NA) +
+  
+  # 2. Legger utøverne inn som røde prikker (med litt jitter så de ikke overlapper)
+  geom_jitter(colour = "red", width = 0.1, height = 0, alpha = 0.6, size = 2) +
+  
+  theme_classic() +
+  labs(x = "Treningsvolum (Gruppe)", 
+       y = "Styrkefremgang i beinhev (post - pre i kg)",
+       title = "Styrkeendring basert på antall sett")
+```
