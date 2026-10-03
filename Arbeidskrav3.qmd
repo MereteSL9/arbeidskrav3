@@ -12,168 +12,143 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Arbeidskrav 3
+# Arbeidskrav 3
 
-Oppgave 1.1:
+## Oppgave 1: Beskrive sammenhenger
 
-En kontinuerlig variabel baserer seg på målinger vi gjør, slik som for eksmpel tid, avstand eller temperatur, der verdiene ligger på en kontinuerlig skala og kan ta en hvilken som helst verdi innenfor et gitt intervall. Kontinuerlige variabler kan gi høy presjon på grunn av sin evne til å bruke uendelig antall desimaler (Spiegelhalter, 2019, s. 46).
-
-Når man undersøker sammenhengen mellom to kontinuerlige variabler i en regresjonsmodell, så bruker man oftest det som kalles enkel lineær regresjon. Med enkel lineær regresjon så handler det om å finne en rett linje som passer best til et sett med punkter, der residualene (avviket mellom det observerte og det forventede) blir minst mulig. Enkel lineær regresjon bruker en uavhengig variabel (x) til å forutsi eller forklare en avhengig variabel (y). Forholdet mellom variablene uttrykkes gjennom den matematiske formelen:
-
-Y~i~  = b~0~ + b~1~X~i~
-
-Analysen under er et praktisk eksempel på en regresjonsmodell og tar utgangspunkt i datasettet *hypertrophy*, en studie gjort av Haun et al. fra 2019.  Analysen forsøker å se sammenhengen mellom en utøvers prosentandel av type II-muskelfibre ved oppstart (PERCENT_TYPE_II_T1) og tykkelsen på vastus lateralis etter 6 uker med trening (VL_T3).
-
-Analysen i R ga følgende estimerte regresjonsformel:
-
-Muskeltykkelse (y) = 2.81 + 0.0058 \* (prosentandel type II-fibre).
-
-I eksempelet over er Pearsons korrelasjonskoeffisient funnet til å være 0.19, som gir en beskrivelse på styrken og retningen av den lineære sammenhengen. Tallet er nærme 0 og står skrevet med positivt fortegn, det vil si at det kun er en svak positiv korrelasjon mellom variablene. Dersom man ønsker å se den faktiske effekten som muskelfibertype har på muskeltykkelse etter en treningsintervensjon, må man se på regresjonsestimatet. Regresjonsestimatet forsøker å forklare forholdet mellom to variabler, og sier noe om hvor stor endring man får i gjennomsnitt i y når x endrer seg med 1 enhet (Spiegelhalter, 2019, s. 126). Regresjonsestimatet, det vil si stigningstallet, er her 0.0058. Det betyr at for hvert prosentpoeng høyere andel av type II-muskelfibre en utøver har ved oppstart, er det er forventet økning i gjennomsnitt med 0.0058 cm tykkelse av vastus lateralis. Skjæringspunktet (b~0~ = 2.81) sier noe om muskeltykkelse i tilfelle x = 0, det vil si 0% type II-muskelfibre. Siden alle mennesker biologisk sett aldri har 0% type II-muskelfibre, blir dette bare en matematisk konstant for å plassere linjen i diagrammet og ikke en reell fysiologisk verdi.
-
-Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som ikke tar hensyn til enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter.
+### Oppgave 1.1:
 
 ```{r}
 #Last inn nødvendige pakker
 library(exscidata)
 library(tidyverse)
-library(ggplot2)
-
-#Definer og hent inn datasett
-tabell <- hypertrophy
 
 #kjør regresjonsmodellen
-modell_1 <- lm(VL_T3 ~ PERCENT_TYPE_II_T1, data = hypertrophy)
-
-#vis fullt statistisk sammendrag av modellen
-#summary(modell_1)
+reg_mod_1_1 <- lm(VL_T3 ~ PERCENT_TYPE_II_T1, data = hypertrophy)
 
 #Skriv ut koeffisienter
-b0 <- coef(modell_1)[1] #Skjæringspunkt (intercept)
-b1 <- coef(modell_1)[2] #Regresjonsestimat (stigningstallet)
-
-#Skriv ut korrelasjonskoeffisienten
-cor(hypertrophy$PERCENT_TYPE_II_T1, hypertrophy$VL_T3, use = "complete.obs")
+b0_1_1 <- coef(reg_mod_1_1)[1] #Skjæringspunkt (intercept)
+b1_1_1 <- coef(reg_mod_1_1)[2] #Regresjonsestimat (stigningstallet)
+r_verdi_1_1 <- cor(hypertrophy$PERCENT_TYPE_II_T1, hypertrophy$VL_T3, use = "complete.obs")
+p_verdi_1_1 <- round(coef(summary(reg_mod_1_1))[2, 4], 5)
 
 #generer spredningsdiagram med regresjonslinje og tekst
-ggplot(hypertrophy, aes(PERCENT_TYPE_II_T1, VL_T3)) + 
+figur_1_1 <- ggplot(hypertrophy, aes(PERCENT_TYPE_II_T1, VL_T3)) + 
   geom_point() + 
   geom_smooth(method = "lm", se = FALSE) + 
   labs(title = "Regresjonsmodell: Muskeltykkelse basert på type II-muskelfibre",
        subtitle = "Data fra Haun et al. (2019)",
        x = "Type II-muskelfibre ved T1 (%)",
-       y = "Muskeltykkelse vastus lateralis etter 6 uker (cm)") + 
+       y = "Muskeltykkelse av vastus lateralis etter 6 uker (cm)") + 
   
   annotate(
     "text",
-    label = paste0("y = ", round(b0, 2), " + ", round(b1, 4), " * x"),
-    x = 50, y = 4.2)
+    label = paste0("y = ", round(b0_1_1, 2), " + ", round(b1_1_1, 4), " * x"),
+    x = 50, y = 4.2) + 
+  
+  theme_classic()
+print(figur_1_1)
 ```
 
-Oppgave 1.2
-
-En kategorisk variabel defineres som en variabel som kan deles inn i to eller flere distinkte grupper eller kategorier (Spiegelhalter, 2019, s. 27). Typiske eksempler på slike variabler kan være kjønn, farger eller ulike typer kosttilskudd brukt i forskning på treningseffekt, i likhet med det som er gjort i *hypertrophy.*
-
-Statistikkprogram klarer ikke å regne med merkelapper eller tekst, og er derfor avhengig å omgjøre fra tekst til tall. Når man inkluderer en kategorisk variabel i en regresjonsmodell, tar man i bruk dummyvariabler. Det vil si at programmet tilegner den ene gruppen verdien 0 (referansegruppe) og den andre gruppen verdien 1 (sammenligningsgruppe). Regresjonsmodellen vil følge samme matematiske formel som i oppgave 1.1 med Yi som muskeltykkelse av vastus lateralis, b~0~ som modellens skjæringspunkt), b~1~ som regresjonsestimatet og X~i~ som dummyvariabelen. b~0~ vil med andre ord være referansegruppens gjennomsnittlige muskeltykkelse av vastus lateralis etter 6 uker treningsintervensjon.
-
-Y~i~  = b~0~ + b~1~X~i~
-
-Et praktisk eksempel på dette er sammenhengen mellom den kontinuerlige avhengige variabelen «muskeltykkelse på vastus lateralis etter 6 uker» (VL_T3) og den kategoriske uavhengige variabelen «kosttilskudd» (GROUP) i datasettet *hypertrophy*, hvor dataene er filtrert til å kun omhandle karbohydratgruppen (MALTO) og proteingruppen (WP).
+### Oppgave 1.2
 
 ```{r}
 library(exscidata)
-library(ggplot2)
 library(tidyverse)
 
-filtrert_data <- hypertrophy |> 
+#lag et nytt objekt filtrert på gruppe
+filtrert_gruppe <- hypertrophy |> 
   filter(GROUP %in% c("MALTO", "WP"))
 
-modell_2 <- lm(VL_T3 ~ GROUP, data = filtrert_data)
+#kjør regresjonsmodellen
+reg_mod_1_2 <- lm(VL_T3 ~ GROUP, data = filtrert_gruppe)
 
-b0_2 <- coef(modell_2)[1]
-b1_2 <- coef(modell_2)[2]
+#hent ut koeffisienter og p-verdi
+b0_1_2 <- coef(reg_mod_1_2)[1]
+b1_1_2 <- coef(reg_mod_1_2)[2]
+p_verdi_1_2 <- round(coef(summary(reg_mod_1_2))[2, 4], 5)
 
-ggplot(filtrert_data, aes(GROUP, VL_T3)) + 
+figur_1_2 <- ggplot(filtrert_gruppe, aes(GROUP, VL_T3)) + 
   geom_jitter(width = 0.1) +
   geom_smooth(method = "lm", aes(group = 1), colour = "red", se = FALSE, linewidth = 1.2) +
   
   labs(
     title = "Regresjonsmodell: Muskeltykkelse med utgangspunkt i kosttilskudd",
     x = "Kosttilskudd (MALTO = 0, WP = 1)",
-    y = "Muskeltykkelse vastus lateralis etter 6 uker (cm)") + 
+    y = "Muskeltykkelse av vastus lateralis etter 6 uker (cm)") + 
   
   theme_minimal()
+
+print(figur_1_2)
 ```
 
-Analysen i R ga følgende estimerte regresjonsformel:
-
-                Muskeltykkelse (y~i~) = 3.2310 – 0.1250 \* (dummyvariabel)
-
-Dummyvariabelen for referansegruppen (MALTO) = 0. Det vil si at skjæringspunktet (B0) er den gjennomsnittlige muskeltykkelsen for referansegruppen. Så analysen over forteller oss at utøverne som brukte karbohydrater hadde en gjennomsnittlig muskeltykkelse på 3.23 cm etter treningsperioden. Det negative regresjonsestimatet på -0.1250 forteller oss at utøverne som brukte proteinpulver (WP) hadde i gjennomsnitt 0.125 cm mindre muskeltykkelse enn utøverne i referansegruppen.
-
-Oppgave 1.3
-
-Vanlig lineær regresjon tar utgangspunkt i at dataene følger en normalfordeling. I et tilfelle hvor den avhengige variabelen er enten 0 eller 1, er man over på det som omtales som binomialfordeling hvor man kun har to mulige utfall. Da tar man i bruk en generalisert lineær modell, som åpner muligheten for å gjøre analyser på data som ikke er normalfordelt.
-
-Datasettet *hypertrophy* er tatt i bruk for å visualisere dette og spørsmålet som ble stilt var: «Kan vi bruke type II muskelfiber hos utøverne ved oppstart for å forutsi om utøverne får god (HIGH) eller dårlig (LOW) respons med tanke på muskelvekst etter treningsintervensjon?».
+### Oppgave 1.3
 
 ```{r}
 library(exscidata)
 library(tidyverse)
-library(ggplot2)
 
 dat_hypertrophy <- exscidata::hypertrophy |> 
   drop_na(CLUSTER) |> 
   mutate(CLUSTER = ifelse(CLUSTER == "HIGH", 1, 0))
 
-modell_3 <- glm(CLUSTER ~ PERCENT_TYPE_II_T1, 
+glm_mod_1_3 <- glm(CLUSTER ~ PERCENT_TYPE_II_T1, 
                       data = dat_hypertrophy,
                       family = binomial(link = "logit"))
 
-ggplot(dat_hypertrophy, aes(x = PERCENT_TYPE_II_T1, y = as.factor(CLUSTER))) +
+figur_1_3 <- ggplot(dat_hypertrophy, aes(x = PERCENT_TYPE_II_T1, y = as.factor(CLUSTER))) +
   geom_boxplot(width = 0.4) +
   geom_point(colour = "red") + 
   theme_classic() +
   labs(x = "Prosentandel type II-muskelfibre ved start (T1)", 
-       y = "Gruppe (0 = Low, 1 = High)")
+       y = "Respons (0 = Low, 1 = High)")
 
-summary(modell_3)
-
-exp(0.04387)
+print(figur_1_3)
 ```
 
-Av analysen får vi et rå-estimat på 0.04387. Rå-estimatet oppgis i log-odds, som gir lite mening når man forsøker å tolke det biologisk. Derfor regner vi dette rå-estimatet om til en odds-ratio (OR), som gir oss et forholdstall som viser prosentvis endring i odds. I eksempelet blir dette e^0.04387^ = 1.045. Dette forteller oss at sjansen for å bli en «high-responder» øker med 4.5% for hver enhet den uavhengige variabelen øker. I dette tilfellet hver 1% økning av andelen type II-muskelfiber hos utøveren ved oppstart. Effekten er ikke statistisk signifikant, vist ved p-verdi = 0.200, men det viser en naturlig tendens.
+## Oppgave 2: Predikere mulige observasjoner
 
-Siden den avhengige variabelen er binær (0 eller 1), kan vi ikke bruke en vanlig rett linje. Link-funksjon (logit) gjør om den rette linjen til en S-kurve, slik at modellen alltid holder seg innenfor 0% og 100%. Dette er viktig for at modellen ikke skal produsere tall som ikke gir biologisk eller statistisk mening i form av umulige sannsynligheter.
-
-Figuren viser at gruppen med «high-responders» generelt har en høyere prosentandel type II-muskelfibre ved oppstart.
-
-Oppgave 2.1
+### Oppgave 2.1
 
 ```{r}
 library(tidyverse)
-library(ggplot2)
 library(exscidata)
 
-strengthvolume <- exscidata::strengthvolume |> 
+strengthvolume_pred <- exscidata::strengthvolume |> 
   filter(exercise %in% c("legpress", "legext")) |> 
   pivot_wider(names_from = exercise, values_from = load)
 
-pred_mod <- lm(legext ~ legpress, data = strengthvolume)
+pred_mod_2_1 <- lm(legext ~ legpress, data = strengthvolume_pred)
 
-coef(pred_mod)
+#hent ut koeffisienter og p-verdi
+b0_2_1 <- coef(pred_mod_2_1)[1]
+b1_2_1 <- coef(pred_mod_2_1)[2]
+r_verdi_2_1 <- cor(strengthvolume_pred$legpress, strengthvolume_pred$legext, use = "complete.obs")
+p_verdi_2_1 <- round(coef(summary(pred_mod_2_1))[2, 4], 5)
 
-ggplot(strengthvolume, aes(legpress, legext)) +
+figur_2_1 <- ggplot(strengthvolume_pred, aes(legpress, legext)) +
   geom_point(alpha = 0.5) +                  
   geom_smooth(method = "lm", se = FALSE) +   
+  labs(title = "Prediksjonsmodell av Leg Extension basert på Leg Press",
+       subtitle = "Data fra Hammarström et al. (2020)", 
+       x = "Leg Press",
+       y = "Leg Extension") + 
+  
+  annotate("text", 
+    label = paste0("y = ", round(b0_2_1, 2), " + ", round(b1_2_1, 4), " * x"),
+    x = 250, y = 150) +
   theme_classic()
 
+print(figur_2_1)
 ```
 
-Oppgave 2.2.
+### Oppgave 2.2
 
 ```{r}
+#| fig-cap: "Utvalget er filtrert til å omhandle deltakerne i single-sett gruppen ved post-test" 
+#| fig-align: "center"
+  
 library(tidyverse)
-library(ggplot2)
 library(exscidata)
 
 strengthvolume_filt <- exscidata::strengthvolume |> 
@@ -181,76 +156,141 @@ strengthvolume_filt <- exscidata::strengthvolume |>
   filter(time == "post", sets == "single") |>
   pivot_wider(names_from = exercise, values_from = load)
 
-pred_mod_2 <- lm(legext ~ legpress, data = strengthvolume_filt)
-pval_2 <- round(coef(summary(pred_mod))[2, 4], 5)
+pred_mod_2_2 <- lm(legext ~ legpress, data = strengthvolume_filt)
 
-ggplot(strengthvolume_filt, aes(legpress, legext)) +
+p_verdi_2_2 <- round(coef(summary(pred_mod_2_2))[2, 4], 5)
+
+figur_2_2 <- ggplot(strengthvolume_filt, aes(legpress, legext)) +
   geom_point(alpha = 0.5) +                  
   geom_smooth(method = "lm", se = FALSE) +   
+  labs(title = "Prediksjonsmodell av Leg Extension basert på Leg Press ved spesifikke betingelser",
+       subtitle = "Data fra Hammarström et al. (2020)", 
+       x = "Leg Press",
+       y = "Leg Extension") + 
   theme_classic()
 
-coef(pred_mod_2)
+print(figur_2_2)
 ```
 
-Oppgave 2.3
+### Oppgave 2.3
 
 ```{r}
 library(exscidata)
+library(ggtext)
 library(tidyverse)
-library(ggplot2)
 
-strengthvolume_filt_2 <- exscidata::strengthvolume |> 
-  filter(exercise %in% c("legpress", "legext")) |> 
-  pivot_wider(names_from = exercise, values_from = load)
+# 1. Kjør regresjonsmodellen for parallelle linjer
+pred_mod_snitt <- lm(legext ~ legpress + sex, data = strengthvolume_filt)
 
-pred_mod_3 <- lm(legext ~ legpress + sex, data = strengthvolume_filt_2)
-pval_3 <- round(coef(summary(pred_mod_3))[2, 4], 5)
+# 2. Generer spredningsdiagrammet uten kompliserte tekst-pakker
+figur_2_3a <- ggplot(strengthvolume_filt, aes(x = legpress, y = legext, color = sex)) + 
+  geom_point(alpha = 0.6, size = 2) +
+  theme_classic() + 
+  scale_color_manual(
+    values = c("female" = "orange", "male" = "blue"),
+    labels = c("female" = "Kvinne", "male" = "Mann")
+  ) +
+  
+  # Parallell regresjonslinje for kvinner (referansegruppe)
+  geom_abline(intercept = coef(pred_mod_snitt)[1], 
+              slope = coef(pred_mod_snitt)[2], 
+              color = "orange", lty = 1, linewidth = 1.2) +
+  
+  # Parallell regresjonslinje for menn (justert opp med kjønnseffekten)
+  geom_abline(intercept = coef(pred_mod_snitt)[1] + coef(pred_mod_snitt)[3], 
+              slope = coef(pred_mod_snitt)[2], 
+              color = "blue", lty = 1, linewidth = 1.2)  + 
+  
+  labs(x = "Maksimal styrke i Leg Press (kg)", 
+       y = "Maksimal styrke i Leg Extension (kg)",
+       color = "Kjønn") +
+  theme(legend.position = "right")
 
-coef(pred_mod_3)
-
-ggplot(strengthvolume_filt_2, aes(legpress, legext, colour = sex)) +
-  geom_point(alpha = 0.5) +                  
-  geom_smooth(method = "lm", se = FALSE) +   
-  theme_classic()
+print(figur_2_3a)
 ```
 
-Oppgave 2.4.
-
 ```{r}
-predict(pred_mod, newdata = data.frame(legpress = 250), interval = "prediction")
+library(exscidata)
+library(ggtext)
+library(tidyverse)
+
+# 1. Kjør regresjonsmodellen med ganger-tegn (*) for uavhengige stigningstall
+pred_mod_innad <- lm(legext ~ legpress * sex, data = strengthvolume_filt)
+
+# 2. Vis det statistiske sammendraget i konsollen for å se de nye tallene
+summary(pred_mod_innad)
+
+# 3. Generer spredningsdiagrammet der linjene har ulik stigning
+figur_2_3b <- ggplot(strengthvolume_filt, aes(x = legpress, y = legext, color = sex)) + 
+  geom_point(alpha = 0.6, size = 2) +
+  theme_classic() + 
+  scale_color_manual(
+    values = c("female" = "orange", "male" = "blue"),
+    labels = c("female" = "Kvinne", "male" = "Mann")
+  ) +
+  
+  # REGRESJONSLINJE FOR KVINNER (Sex = 0):
+  # Bruker startverdien [1] og kvinnenes stigningstall [2]
+  geom_abline(intercept = coef(pred_mod_innad)[1], 
+              slope = coef(pred_mod_innad)[2], 
+              color = "orange", lty = 1, linewidth = 1.2) +
+  
+  # REGRESJONSLINJE FOR MENN (Sex = 1):
+  # Mennenes startverdi er [1] +. 
+  # Mennenes stigningstall (effekt innad) er summen av kvinnenes stigning [2] og interaksjonen [4]
+  geom_abline(intercept = coef(pred_mod_innad)[1] + coef(pred_mod_innad)[3], 
+              slope = coef(pred_mod_innad)[2] + coef(pred_mod_innad)[4], 
+              color = "blue", lty = 1, linewidth = 1.2)  + 
+  
+  labs(x = "Styrke i Leg Press (kg)", 
+       y = "Styrke i Leg Extension (kg)",
+       color = "Kjønn") +
+  theme(legend.position = "right")
+
+print(figur_2_3b)
 ```
 
-Oppgave 3.1.
+### Oppgave 2.4
 
 ```{r}
 library(tidyverse)
-library(ggplot2)
+library(exscidata)
+
+# 1. Definer en ny observasjon (bytt ut 150 med et tall som passer dine data)
+ny_person <- data.frame(legpress = 150, sex = "male")
+
+# 2. Hent ut prediksjonen med PREDIKSJONSINTERVALLET
+predict(pred_mod_innad, newdata = ny_person, interval = "prediction", level = 0.95)
+```
+
+## Oppgave 3: Trekke slutninger
+
+### Oppgave 3.1
+
+```{r}
+library(tidyverse)
 library(exscidata)
 
 # 1. Håndtering av data: Vi filtrerer på beinhev og regner ut endringen (post minus pre)
-dat_endring <- exscidata::strengthvolume |> 
+strengthvolume_endring <- exscidata::strengthvolume |> 
   filter(exercise == "legext") |> 
   select(participant, sex, sets, time, load) |> 
   pivot_wider(names_from = time, values_from = load) |> 
   mutate(change = post - pre) # Regner ut forandringen i kilo for hver utøver
 
 # 2. Modell: Vi tester om treningsvolum (sets) kan forklare endringen i styrke
-modell_slutning <- lm(change ~ sets, data = dat_endring)
+modell_3_1 <- lm(change ~ sets, data = strengthvolume_endring)
 
-# 3. Vis tabellen med resultatene
-summary(modell_slutning)
-
-coef(modell_slutning)
-
-ggplot(dat_endring, aes(x = sets, y = change)) +
-  # 1. Tegner boksene i bakgrunnen
-  geom_boxplot(width = 0.4, outlier.shape = NA) +
-  
-  # 2. Legger utøverne inn som røde prikker (med litt jitter så de ikke overlapper)
-  geom_jitter(colour = "red", width = 0.1, height = 0, alpha = 0.6, size = 2) +
-  
-  theme_classic() +
-  labs(x = "Treningsvolum (Gruppe)", 
-       y = "Styrkefremgang i beinhev (post - pre i kg)",
-       title = "Styrkeendring basert på antall sett")
+ggplot(strengthvolume_endring, aes(sets, change, fill = sets)) + 
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) + # Viser boksene
+  geom_jitter(width = 0.1, alpha = 0.4, color = "black") + # Viser enkeltpersonene
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 4, fill = "red") + # Rød diamant for gjennomsnittet
+  labs(
+    title = "Forskjell i styrkeøkning basert på treningsvolum",
+    subtitle = "Rød diamant viser gjennomsnittlig forandring i hver gruppe",
+    x = "Treningsvolum (Sets)",
+    y = "Forandring i legext (post - pre)"
+  ) + 
+  theme_minimal() +
+  theme(legend.position = "none") # Fjerner unødvendig tegnforklaring
 ```
