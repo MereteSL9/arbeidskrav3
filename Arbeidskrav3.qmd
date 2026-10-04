@@ -6,6 +6,11 @@ execute:
   warning: false
   message: false
   echo: false
+crossref:
+  tbl-title: "Tabell"
+  tbl-prefix: "tabell"
+  fig-title: "Figur"
+  fig-prefix: "figur"
 format: pdf
 editor: visual
 editor_options: 
@@ -38,7 +43,7 @@ Analysen under tar utgangspunkt i datasettet *hypertrophy*, og ser på sammenhen
 
 $$\text{gjennomsnittlig muskeltykkelse} = 2.81 + 0.0058 \cdot \text{prosentandel type II-fibre}$$
 
-Skjæringspunktet ($\beta_0$ = 2.81) angir muskeltykkelsen i tilfellet x = 0, det vil si muskeltykkelsen hos en person med 0% type II-muskelfibre. Siden det biologisk sett ikke er mulig å ha 0% type II-muskelfibre, blir dette bare en matematisk konstant i diagrammet og ikke en reell fysiologisk verdi.
+Skjæringspunktet ($\beta_0$ = 2.81) angir muskeltykkelse i tilfellet x = 0, det vil si 0% type II-muskelfibre. Siden det biologisk sett ikke er mulig å ha 0% type II-muskelfibre, blir dette bare en matematisk konstant i diagrammet og ikke en reell fysiologisk verdi.
 
 Regresjonsestimatet ($\beta_1$), som representerer regresjonslinjens stigningstall, er her 0.0058. Dette betyr at for hvert prosentpoeng høyere andel av type II-muskelfibre en utøver har ved oppstart, er det forventet en gjennomsnittlig økning på 0.0058 cm i muskeltykkelse etter intervensjonen. Regresjonsestimatet er imidlertid ikke statistisk signifikant, vist ved høy *p*-verdi på 0.323.
 
@@ -49,6 +54,7 @@ Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggen
 ```{r}
 #| fig-align: "center"
 #| out-width: "60%"
+#| fig-cap: "Blå linje viser regresjonslinjen"
 
 #Last inn nødvendige pakker
 library(exscidata)
@@ -89,7 +95,7 @@ Statistiske programvarer klarer ikke å regne direkte med merkelapper eller teks
 
 $$y \sim \text{Normal}(\mu, \sigma)$$ $$\mu = \beta_0 + \beta_1 x$$
 
-Her representerer $\ y$ muskeltykkelsen i vastus lateralis, $\beta_0$er modellens skjæringspunkt, $\beta_1$er regresjonsestimatet – som her indikerer forskjellen mellom gruppene – og $\ x$ er dummyvariabelen. Siden referansegruppens dummyvariabel er kodet som x = 0, vil skjæringspunktet i modellen representerer referansegruppens gjennomsnittlige muskeltykkelse etter 6 uker trening.
+Her representerer $\mu$ gjennomsnittlig muskeltykkelse i vastus lateralis, $\beta_0$er modellens skjæringspunkt, $\beta_1$er regresjonsestimatet – som her indikerer forskjellen mellom gruppene – og $\ x$ er dummyvariabelen. Siden referansegruppens dummyvariabel er kodet som x = 0, vil skjæringspunktet i modellen representere referansegruppens gjennomsnittlige muskeltykkelse etter 6 uker trening.
 
 Et praktisk eksempel på dette er sammenhengen mellom den kontinuerlige avhengige variabelen «muskeltykkelse på vastus lateralis etter 6 uker» (VL_T3) og den kategoriske uavhengige variabelen «kosttilskudd» (GROUP) i datasettet *hypertrophy*, hvor dataene er filtrert til å kun omhandle karbohydratgruppen (MALTO) og proteingruppen (WP). Analysen i R ga følgende estimerte regresjonsformel:
 
@@ -100,6 +106,7 @@ Dummyvariabelen for referansegruppen (MALTO) er satt til 0. Det betyr at skjæri
 ```{r}
 #| out-width: "60%"
 #| fig-align: "center" 
+#| fig-cap: "Rød linje viser gjennomsnittlig forskjell mellom gruppene"
  
 library(exscidata)
 library(tidyverse)
@@ -266,7 +273,7 @@ p_verdi_2_2 <- round(coef(summary(pred_mod_2_2))[2, 4], 5)
 figur_2_2 <- ggplot(strengthvolume_filt, aes(legpress, legext)) +
   geom_point(alpha = 0.5) +                  
   geom_smooth(method = "lm", se = FALSE) +   
-  labs(title = "Prediksjonsmodell av Leg Extension basert på Leg Press ved spesifikke betingelser",
+  labs(title = "Prediksjon ved spesifikke betingelser",
        subtitle = "Data fra Hammarström et al. (2020)", 
        x = "Leg Press (kg)",
        y = "Leg Extension (kg)") + 
@@ -278,15 +285,15 @@ print(figur_2_2)
 
 ### Oppgave 2.3: Prediksjonsmodell med utgangspunkt i kjønn
 
-Modellen utvides fra en enkel til en multippel lineær regresjonsmodell, dette er for å undersøke hvordan kjønn «sex» påvirker prediksjonen av styrke i «legext» forklart av «legpress». Funksjonen lm() brukes fortsatt og R setter automatisk kvinner til referansegruppe (0) og menn til sammenligningsgruppe (1). Kjønn kan inkluderes i modellen på to forskjellige måter, for å se effekten i gjennomsnitt eller innad i kjønnene.
+Modellen utvides fra en enkel til en multippel lineær regresjonsmodell, dette er for å undersøke hvordan kjønn (sex) påvirker prediksjonen av styrke i «legext» forklart av «legpress». Funksjonen lm() brukes fortsatt og R setter automatisk kvinner til referansegruppe (0) og menn til sammenligningsgruppe (1). Kjønn kan inkluderes i modellen på to forskjellige måter, for å se effekten i gjennomsnitt eller innad i kjønnene.
 
 Dersom vi antar at økning i styrke er lik på tvers av kjønn - det vil at begge kjønn øker like mye i «legext» per kilo «legpress» - kan følgende formel brukes:
 
 $$\text{gjennomsnittlig legext} = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot sex$$
 
-Kvinnenes regresjonslinje (sex = 0) følger formelen $\text{gjennomsnittlig legext} = \beta_0 + \beta_2 + \beta_1 \cdot \text{legpress}$. Skjæringspunktet $\beta_0$ viser hvor kvinnenes linje starter på y – aksen.
+Kvinnenes regresjonslinje (sex = 0) følger formelen: $\text{gjennomsnittlig legext} = \beta_0 + \beta_2 + \beta_1 \cdot \text{legpress}$. Skjæringspunktet $\beta_0$ viser hvor kvinnenes linje starter på y – aksen.
 
-Mennenes regresjonslinje (sex = 1) følger formelen $\text{gjennomsnittlig legext} = (\beta_0 + \beta_2) + \beta_1 \cdot \text{legpress}$. Estimatet ($\beta_2$) viser den faste, gjennomsnittlige avstanden mellom de to linjene.
+Mennenes regresjonslinje (sex = 1) følger formelen: $\text{gjennomsnittlig legext} = (\beta_0 + \beta_2) + \beta_1 \cdot \text{legpress}$. Estimatet ($\beta_2$) viser den faste, gjennomsnittlige avstanden mellom de to linjene.
 
 Regresjonsmodellen ga følgende estimerte formel:
 
@@ -345,6 +352,7 @@ Siden mennene er satt som sammenligningsgruppe (sex = 1), blir alle leddene i fo
 ```{r}
 #| out-width: "60%"
 #| fig-align: "center" 
+#| fig-cap: "Spredningsdiagram med interaksjonseffekt for kjønn"
 
 library(exscidata)
 library(ggtext)
@@ -373,7 +381,6 @@ figur_2_3b <- ggplot(strengthvolume_filt, aes(legpress, legext, color = sex)) +
               color = "blue", linewidth = 1.2)  + 
   
   labs(
-    title = "Spredningsdiagram med interaksjonseffekt for kjønn",
     x = "Styrke i Leg Press (kg)", 
     y = "Styrke i Leg Extension (kg)",
     color = "Kjønn") +
@@ -389,7 +396,7 @@ Oppgaven tar utgangspunkt i modellen fra oppgave 2.3:
 
 $$\text{gjennomsnittlig legext} = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot \text{sex} + \beta_3 \cdot (\text{legpress} \cdot \text{sex})$$
 
-La oss si at en mann tar 150 kg i legpress. For denne verdien gir modellen et punktestimat, også kalt et gjennomsnittsestimat. I eksempelet gir modellen en estimert «legext»-verdi på 81.97 kg. Siden enkeltpersoner varierer naturlig, kan det være nyttig og naturlig å finne et område som man forventer at nye, individuelle observasjoner havner innenfor – et såkalt prediksjonsintervall. Man kan da med 95% sikkerhet si at vi forventer at en ny, enkeltstående person med den gitte verdien på legpress, vil ha en legext-verdi som ligger i området mellom 51.43 kg og 112.51 kg. Dette intervallet er relativt bredt fordi det tar høyde for både usikkerheten i selve regresjonsmodellen og den naturlige variasjonen (residualene) som eksisterer mellom enkeltpersoner innad i populasjonen.
+La oss si at en mann tar 150 kg i legpress. For denne verdien gir modellen et punktestimat, også kalt et gjennomsnittsestimat. I eksempelet gir modellen en estimert «legext»-verdi på 81.97 kg. Siden enkeltpersoner varierer naturlig, kan det være nyttig og naturlig å finne et område som man forventer at nye, individuelle observasjoner havner innenfor – et såkalt prediksjonsintervall. Man kan da med 95% sikkerhet si at vi forventer at en ny, enkeltstående person havner innenfor intervallet. I eksempelet med den gitte verdien på legpress, vil man få en legext-verdi som ligger i området mellom 51.43 kg og 112.51 kg. Dette intervallet er relativt bredt fordi det tar høyde for både usikkerheten i selve regresjonsmodellen og den naturlige variasjonen (residualene) som eksisterer mellom enkeltpersoner innad i populasjonen.
 
 ```{r}
 library(tidyverse)
@@ -412,14 +419,14 @@ Datasettet ble filtrert på øvelsen «legext» og tidspunktene «pre» og «pos
 
 Resultatene ga følgende estimerte regresjonsmodell:
 
-$$\text{gjennomsnittlig endring} = 32.21 - 3.65 \cdot \text{sett}$$
+$$\text{gjennomsnittlig endring i muskelstyrke} = 32.21 - 3.65 \cdot \text{sett}$$
 
-Dataene er presentert som et boksplot. Rød diamant viser gjennomsnittlig endring i styrke for de respektive gruppene, og visuelt kan man se at forskjellen i høyde viser forskjellen mellom gruppene. Konstanten ($\beta_0$ = 32.21) viser at gruppen som trente flere sett (multiple = 0) hadde en gjennomsnittlig økning på 32.21 kg. Regresjonsestimatet ($\beta_1$ = -3.65) viser at gruppen som trente ett sett (single = 1) hadde en mindre gjennomsnittlig økning.
+Dataene er presentert som et boksplot. Hvit diamant viser gjennomsnittlig endring i styrke for de respektive gruppene, og visuelt kan man se at forskjellen i høyde viser forskjellen mellom gruppene. Konstanten ($\beta_0$ = 32.21) viser at gruppen som trente flere sett (multiple = 0) hadde en gjennomsnittlig økning på 32.21 kg. Regresjonsestimatet ($\beta_1$ = -3.65) viser at gruppen som trente ett sett (single = 1) hadde en mindre gjennomsnittlig økning.
 
 ```{r}
 #| out-width: "80%"
 #| fig-align: "center" 
-#| fig-cap: "Hvit diamant viser gjennomsnittlig forandring i hver gruppe"
+#| fig-cap: "Hvit diamant viser gjennomsnittlig endring i hver gruppe"
 
 library(tidyverse)
 library(exscidata)
@@ -458,3 +465,9 @@ Det aktuelle datasettet og regresjonsmodellen er basert på et begrenset utvalg 
 *P-*verdien på 0.268 er betydelig større enn signifikansnivået som er satt til 0.05, som indikerer at forskjellen mellom treningsvolumene ikke er statistisk signifikant. Det betyr at resultatene ikke kan generaliseres, og forskjellen i nettopp dette utvalget kan skyldes rene tilfeldigheter og støy. Den aktuelle regresjonsmodellen kan derfor ikke brukes for å måle effekten på populasjonen ellers.
 
 Standardfeilen måler usikkerheten i estimatene. Modellen har en høy standardfeil på 3.27, som man ser er nesten like stor som regresjonsestimatet. Dette gir en høy usikkerhet rundt tallene. Høy standardfeil gir lav t-verdi og høy *p*-verdi. Den høye standardfeilen viser at det er høy grad av tilfeldig variasjon, så det kan ikke konkluderes sikkert om effekten er reell i populasjonen.
+
+{{< pagebreak >}}
+
+## Vedlegg 
+
+Github-lenke:
