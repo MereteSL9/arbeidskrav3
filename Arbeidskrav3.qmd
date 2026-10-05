@@ -82,7 +82,7 @@ Regresjonsestimatet ($\beta_1$), som representerer regresjonslinjens stigningsta
 
 I eksempelet er Pearsons korrelasjonskoeffisient beregnet til *r* = 0.19, som beskriver styrken og retningen av den lineære sammenhengen. Siden verdien er nær 0 og har positivt fortegn, er tolkningen av det at det er en svak, positiv korrelasjon mellom variablene, men dette er svært usikkert og kan tilskrives tilfeldighet. Dersom man ønsker å se den faktisk, ustandardiserte effekten av muskelfibertype på endring i muskeltykkelse, er det regresjonsestimatet som må tolkes.
 
-Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som er uavhengig av enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter, her cm per prosentpoeng. Med andre ord er stigningstallet til regresjonslinjen det samme som korrelasjonskoeffisienten justert for forholdene mellom standardavvikene mellom de to variablene.
+Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som er uavhengig av enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter, her cm per prosentpoeng. Med andre ord er stigningstallet til regresjonslinjen lik korrelasjonskoeffisienten justert for forholdene mellom standardavvikene mellom de to variablene.
 
 ### Oppgave 1.2: Sammenheng mellom kontinuerlig og kategorisk variabel
 
@@ -461,6 +461,12 @@ Det aktuelle datasettet og regresjonsmodellen er basert på et begrenset utvalg 
 *P-*verdien på 0.268 er betydelig større enn signifikansnivået som er satt til 0.05, som indikerer at forskjellen mellom treningsvolumene ikke er statistisk signifikant. Det betyr at resultatene ikke kan generaliseres, og forskjellen i nettopp dette utvalget kan skyldes rene tilfeldigheter og støy. Den aktuelle regresjonsmodellen kan derfor ikke brukes for å måle effekten på populasjonen ellers.
 
 Standardfeilen måler usikkerheten i estimatene. Modellen har en høy standardfeil på 3.27, som man ser er nesten like stor som regresjonsestimatet. Dette gir en høy usikkerhet rundt tallene. Høy standardfeil gir lav t-verdi og høy *p*-verdi. Den høye standardfeilen viser at det er høy grad av tilfeldig variasjon, så det kan ikke konkluderes sikkert om effekten er reell i populasjonen.
+
+{{< pagebreak >}}
+
+## Referanser
+
+All bakgrunnteori og statistiske definisjoner i oppgaven er hentet fra og basert på publiserte emnenotater fra emnet IDR4000 Kvantitativ metode og statistikk. Datasettene *hypertrophy* og *strengthvolume* er utlevert i emnet.
 
 {{< pagebreak >}}
 
