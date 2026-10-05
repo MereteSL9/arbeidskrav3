@@ -281,7 +281,7 @@ Dersom vi antar at økning i styrke er lik på tvers av kjønn - det vil at begg
 
 $$\mu = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot sex$$
 
-Kvinnenes regresjonslinje (sex = 0) følger formelen: $\mu = \beta_0 + \beta_2 + \beta_1 \cdot \text{legpress}$. Skjæringspunktet $\beta_0$ viser hvor kvinnenes linje starter på y – aksen.
+Kvinnenes regresjonslinje (sex = 0) følger formelen: $\mu = \beta_0 + \beta_1 \cdot \text{legpress}$. Skjæringspunktet $\beta_0$ viser hvor kvinnenes linje starter på y – aksen.
 
 Mennenes regresjonslinje (sex = 1) følger formelen: $\mu = (\beta_0 + \beta_2) + \beta_1 \cdot \text{legpress}$. Estimatet ($\beta_2$) viser den faste, gjennomsnittlige avstanden mellom de to linjene.
 
