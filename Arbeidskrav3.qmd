@@ -35,26 +35,18 @@ Emnekode: IDR4000
 
 ### Oppgave 1.1: Sammenheng mellom to kontinuerlige variabler
 
-Når man undersøker sammenhengen mellom to kontinuerlige variabler i en regresjonsmodell, benyttes det oftest en enkel lineær regresjonsanalyse. Målet med analysen er å finne og tilpasse en rett linje til et sett med datapunkter, slik at residualene – det vil si avviket mellom det observerte og det forventede – blir minst mulig. Enkel lineær regresjon bruker én uavhengig variabel (x) til å forutsi eller forklare en avhengig variabel (y). Forholdet mellom variablene uttrykkes gjennom den matematiske formelen:
+Når man undersøker sammenhengen mellom to kontinuerlige variabler i en regresjonsmodell, benyttes det oftest en enkel lineær regresjonsanalyse. Målet med analysen er å finne og tilpasse en rett linje til et sett med datapunkter, slik at residualene – det vil si avviket mellom det observerte og det forventede – blir minst mulig. Enkel lineær regresjon bruker én uavhengig variabel (x) til å forutsi eller forklare en avhengig variabel (y). Forholdet mellom variablene uttrykkes gjennom en matematisk formel, hvor man antar at y-verdiene er normalfordelt rundt et gjennomsnitt ($\mu$) med et gitt standardavvik ($\sigma$):
 
 $$y \sim \text{Normal}(\mu, \sigma)$$ $$\mu = \beta_0 + \beta_1 x$$
 
-Analysen under tar utgangspunkt i datasettet *hypertrophy*, og ser på sammenhengen mellom en utøvers prosentandel av type II-muskelfibre ved oppstart (PERCENT_TYPE_II_T1) og tykkelsen på vastus lateralis etter 6 uker med trening (VL_T3). Analysen ga følgende estimerte regresjonsformel:
+For å visualisere og eksemplifisere dette kan man ta utgangspunkt i datasettet *hypertrophy*, og se på sammenhengen mellom utøvernes prosentandel av type II-muskelfibre ved oppstart (PERCENT_TYPE_II_T1) og tykkelsen på vastus lateralis etter 6 uker med trening (VL_T3). En enkel regresjonsanalyse ga følgende estimerte regresjonsformel, hvor $\mu$ representerer forventet gjennomsnittlig muskeltykkelse:
 
-$$\text{gjennomsnittlig muskeltykkelse} = 2.81 + 0.0058 \cdot \text{prosentandel type II-fibre}$$
-
-Skjæringspunktet ($\beta_0$ = 2.81) angir muskeltykkelse i tilfellet x = 0, det vil si 0% type II-muskelfibre. Siden det biologisk sett ikke er mulig å ha 0% type II-muskelfibre, blir dette bare en matematisk konstant i diagrammet og ikke en reell fysiologisk verdi.
-
-Regresjonsestimatet ($\beta_1$), som representerer regresjonslinjens stigningstall, er her 0.0058. Dette betyr at for hvert prosentpoeng høyere andel av type II-muskelfibre en utøver har ved oppstart, er det forventet en gjennomsnittlig økning på 0.0058 cm i muskeltykkelse etter intervensjonen. Regresjonsestimatet er imidlertid ikke statistisk signifikant, vist ved høy *p*-verdi på 0.323.
-
-I eksempelet er Pearsons korrelasjonskoeffisient beregnet til *r* = 0.19, som beskriver styrken og retningen av den lineære sammenhengen. Siden verdien er nær 0 og har positivt fortegn, betyr dette at det kun er en svak positiv korrelasjon mellom variablene. Dersom man ønsker å se den faktisk, ustandardiserte effekten av muskelfibertype på endring i muskeltykkelse, er det regresjonsestimatet som må tolkes.
-
-Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som er uavhengig av enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter, her cm per prosentpoeng.
+$$\mu = 2.81 + 0.0058 \cdot \text{prosentandel type II-fibre}$$
 
 ```{r}
 #| fig-align: "center"
 #| out-width: "60%"
-#| fig-cap: "Blå linje viser regresjonslinjen"
+#| fig-cap: "Blå linje viser regresjonslinjen i modellen"
 
 #Last inn nødvendige pakker
 library(exscidata)
@@ -78,16 +70,19 @@ figur_1_1 <- ggplot(hypertrophy, aes(PERCENT_TYPE_II_T1, VL_T3)) +
        x = "Type II-muskelfibre ved T1 (%)",
        y = "Muskeltykkelse vastus lateralis etter 6 uker (cm)") + 
   
-  annotate(
-    "text",
-    label = paste0("y = ", round(b0_1_1, 2), " + ", round(b1_1_1, 4), " * x"),
-    x = 50, y = 4.2) + 
-  
   theme_minimal()
 
 #kjører ut figuren
 print(figur_1_1)
 ```
+
+Skjæringspunktet ($\beta_0$ = 2.81) angir gjennomsnittlig målt muskeltykkelse i tilfellet x = 0, det vil si 0% type II-muskelfibre. Siden det biologisk sett ikke er mulig å ha 0% type II-muskelfibre, blir dette bare en matematisk konstant i diagrammet og ikke en reell fysiologisk verdi.
+
+Regresjonsestimatet ($\beta_1$), som representerer regresjonslinjens stigningstall, er her 0.0058. I eksempelet betyr det at for hvert prosentpoeng høyere andel av type II-muskelfibre en utøver har ved oppstart, er det forventet en gjennomsnittlig økning på 0.0058 cm i muskeltykkelse etter intervensjonen. Regresjonsestimatet er imidlertid ikke statistisk signifikant, vist ved høy *p*-verdi på 0.323.
+
+I eksempelet er Pearsons korrelasjonskoeffisient beregnet til *r* = 0.19, som beskriver styrken og retningen av den lineære sammenhengen. Siden verdien er nær 0 og har positivt fortegn, er tolkningen av det at det er en svak, positiv korrelasjon mellom variablene, men dette er svært usikkert og kan tilskrives tilfeldighet. Dersom man ønsker å se den faktisk, ustandardiserte effekten av muskelfibertype på endring i muskeltykkelse, er det regresjonsestimatet som må tolkes.
+
+Både korrelasjonskoeffisienten og regresjonsestimatet beskriver den underliggende lineære sammenhengen i dataene, og de vil alltid dele retning. Dette vises ved likt fortegn. Der korrelasjonskoeffisienten er et standardisert mål mellom -1 og 1 som er uavhengig av enheter, vil regresjonsestimatet vise effekt målt i dataenes egne enheter, her cm per prosentpoeng. Med andre ord er stigningstallet til regresjonslinjen det samme som korrelasjonskoeffisienten justert for forholdene mellom standardavvikene mellom de to variablene.
 
 ### Oppgave 1.2: Sammenheng mellom kontinuerlig og kategorisk variabel
 
@@ -95,19 +90,17 @@ Statistiske programvarer klarer ikke å regne direkte med merkelapper eller teks
 
 $$y \sim \text{Normal}(\mu, \sigma)$$ $$\mu = \beta_0 + \beta_1 x$$
 
-Her representerer $\mu$ gjennomsnittlig muskeltykkelse i vastus lateralis, $\beta_0$er modellens skjæringspunkt, $\beta_1$er regresjonsestimatet – som her indikerer forskjellen mellom gruppene – og $\ x$ er dummyvariabelen. Siden referansegruppens dummyvariabel er kodet som x = 0, vil skjæringspunktet i modellen representere referansegruppens gjennomsnittlige muskeltykkelse etter 6 uker trening.
+Her representerer $\mu$ gjennomsnittlig muskeltykkelse i vastus lateralis, $\beta_0$ er modellens skjæringspunkt, $\beta_1$ er regresjonsestimatet – som her indikerer forskjellen mellom gruppene – og $\ x$ er dummyvariabelen. Siden referansegruppens dummyvariabel er kodet som x = 0, vil skjæringspunktet i modellen representere referansegruppens gjennomsnittlige muskeltykkelse etter 6 uker trening.
 
 Et praktisk eksempel på dette er sammenhengen mellom den kontinuerlige avhengige variabelen «muskeltykkelse på vastus lateralis etter 6 uker» (VL_T3) og den kategoriske uavhengige variabelen «kosttilskudd» (GROUP) i datasettet *hypertrophy*, hvor dataene er filtrert til å kun omhandle karbohydratgruppen (MALTO) og proteingruppen (WP). Analysen i R ga følgende estimerte regresjonsformel:
 
-$$\text{gjennomsnittlig muskeltykkelse} = 3.2310 - 0.1250 \cdot \text{dummyvariabel}$$
-
-Dummyvariabelen for referansegruppen (MALTO) er satt til 0. Det betyr at skjæringspunktet ($\beta_0$ = 3.2310) uttrykker den gjennomsnittlige muskeltykkelsen for gruppen som inntok karbohydrater. Det negative regresjonsestimatet ( $\beta_1$ = -0.1250) representerer forskjellen mellom gruppene og betyr at utøverne som inntok proteinpulver (WP), i gjennomsnitt hadde 0.125 cm mindre muskeltykkelse enn utøverne i referansegruppen. Heller ikke her er regresjonsestimatet statistisk signifikant, vist ved høy *p*-verdi på 0.509.
+$$\mu = 3.2310 - 0.1250 \cdot \text{dummyvariabel}$$
 
 ```{r}
 #| out-width: "60%"
 #| fig-align: "center" 
 #| fig-cap: "Rød linje viser gjennomsnittlig forskjell mellom gruppene"
- 
+
 library(exscidata)
 library(tidyverse)
 
@@ -139,15 +132,17 @@ figur_1_2 <- ggplot(filtrert_gruppe, aes(GROUP, VL_T3)) +
 print(figur_1_2)
 ```
 
+Dummyvariabelen for referansegruppen (MALTO) er satt til 0. Det betyr at skjæringspunktet ($\beta_0$ = 3.2310) uttrykker den gjennomsnittlige muskeltykkelsen for gruppen som inntok karbohydrater. Det negative regresjonsestimatet ($\beta_1$ = -0.1250) representerer forskjellen mellom gruppene og betyr at utøverne som inntok proteinpulver (WP), i gjennomsnitt hadde 0.125 cm mindre muskeltykkelse enn utøverne i referansegruppen. Heller ikke her er regresjonsestimatet statistisk signifikant, vist ved høy *p*-verdi på 0.509, så det er usikker hvor reell effekt det er snakk om.
+
 ### Oppgave 1.3: Generalisert lineær modell
 
 Vanlig lineær regresjon tar utgangspunkt i at dataene følger en normalfordeling. I tilfeller hvor den avhengige variabelen er binær – det vil si at den kun tar verdien 0 eller 1 – jobber man med en binomialfordeling med kun to mulige utfall. I analyse av slike data tar man i bruk en generalisert lineær modell (GLM), som åpner muligheten for å gjøre analyser på data som ikke er normalfordelt.
 
-Datasettet *hypertrophy* er tatt i bruk for å visualisere dette, hvor man kunne stille følgende spørsmål: «Kan vi bruke type II muskelfiber hos utøverne ved oppstart for å forutsi om utøverne får god (HIGH) eller dårlig (LOW) respons med tanke på muskelvekst etter treningsintervensjon?».
+Datasettet *hypertrophy* er tatt i bruk for å visualisere dette, hvor man kan stille følgende spørsmål: «Kan vi bruke type II muskelfiber hos utøverne ved oppstart for å forutsi om utøverne får god (HIGH) eller dårlig (LOW) respons med tanke på muskelvekst etter treningsintervensjon?».
 
-Logistisk regresjonsanalyse i R ga et rå-estimat (stigningstall) på 0.04387. Dette rå-estimatet er oppgitt i log-odds, som gir lite mening når man forsøker å tolke det biologisk eller fysiologisk. For å kunne tolke resultatet gjør vi en eksponensiering av rå-estimatet for å få en odds-ratio ($\text{OR} = e^{\beta}$). I eksempelet blir dette $e^{0.04387} = 1.045$. Odds-ratio er et forholdstall, og uttrykker den relative, prosentvise endringen i odds for hver enhet den uavhengige variabelen øker. En odds-ratio på 1.045 forteller oss at for hvert prosentpoeng økning i andel type II-muskelfibre hos en utøver ved start, øker oddsen for å bli en «high-responder» med 4.5%. Resultatet er ikke statistisk signifikant, vist ved *p*-verdi = 0.200, men resultatene indikerer en positiv tendens.
+For å kunne forutsi om noe skjer eller ikke skjer, bruker man logistisk regresjon. Når man gjør en slik analyse i R, får man ut et rå-estimat som er oppgitt som den naturlige logaritmen til oddsen (log-odds). Dessverre er dette et tall som gir lite mening når man forsøker å tolke det biologisk eller fysiologisk. Man utfører derfor en eksponensiering av rå-estimatet for å få en odds-ratio ($\text{OR} = e^{\beta}$). I eksempelet blir dette $e^{0.04387} = 1.045$. Odds-ratio er et forholdstall som beskriver hvordan oddsen endrer seg basert på endringer av den uavhengige variabelen. En odds-ratio på 1.045 forteller oss at for hvert prosentpoeng økning i andel type II-muskelfibre hos utøver ved start, øker oddsen for å bli en «high-responder» med 4.5%. Resultatet er ikke statistisk signifikant, vist ved *p*-verdi = 0.200, men resultatene indikerer en positiv tendens i dette utvalget.
 
-Siden den avhengige variabelen er binær (0 eller 1), kan vi ikke bruke en tradisjonell lineær regresjonslinje da denne ville forutsagt verdier under 0 og over 1. Modellens link-funksjon (logit) gjør om den rette linjen til en S-kurve, slik at modellen alltid holder seg innenfor 0% og 100%. Dette er viktig for at modellen ikke skal produsere tall som ikke gir biologisk eller statistisk mening i form av umulige sannsynligheter.
+Siden den avhengige variabelen er binær (0 eller 1), kan vi ikke bruke en tradisjonell lineær regresjonslinje, da denne ville forutsagt verdier under 0 og over 1. Modellens link-funksjon (logit) gjør om den rette linjen til en S-kurve, slik at modellen alltid holder seg innenfor 0% og 100%. Dette er viktig for at modellen ikke skal produsere tall som ikke gir biologisk eller statistisk mening i form av umulige sannsynligheter.
 
 Figuren viser at gruppen med «high-responders» generelt har en høyere prosentandel type II-muskelfibre ved oppstart.  
 
@@ -187,18 +182,18 @@ print(figur_1_3)
 
 ### Oppgave 2.1: Prediksjonsmodell med fullt datasett
 
-Datasettet ble først filtrert til et bredt format der øvelsene «legpress» og «legext» ble tildelt hver sin kolonne, mens øvrige øvelser ble ekskludert fra datamaterialet. Prediksjonsmodellen følger strukturen:
+Datasettet ble først filtrert til et bredt format der øvelsene «legpress» og «legext» ble tildelt hver sin kolonne, mens øvrige øvelser ble ekskludert fra datamaterialet. Prediksjonsmodellen tilsvarende struktur som tidligere:
 
 $$y \sim \text{Normal}(\mu, \sigma)$$ $$\mu = \beta_0 + \beta_1 x$$
 
-Basert på den statiske analysen av det filtrerte utvalget, ble følgende estimerte regresjonsformel utarbeidet:
+Basert på den statistiske analysen av det filtrerte utvalget, ble følgende estimerte regresjonsformel utarbeidet, hvor $\mu$ representerer gjennomsnittlig verdi av legext:
 
-$$\text{gjennomsnittlig legext} = 19.20 + 0.25 \cdot \text{legpress}$$
+$$\mu = 19.20 + 0.25 \cdot \text{legpress}$$
 
-Skjæringspunktet ( $\beta_0$ = 19.20) angir den teoretiske startverdien i «legext» dersom en utøver tar 0 kg i «legpress». Regresjonsestimatet ($\beta_1$ = 0.25) representerer prediksjonsmodellens stigningstall. Det forteller oss at for hver kilo en utøver øker sin maksimale styrke i «legpress», forventes det en gjennomsnittlig økning på 0.25 kg i «legext» for dette utvalget.
+Skjæringspunktet ($\beta_0$ = 19.20) angir den teoretiske startverdien i «legext» dersom en utøver tar 0 kg i «legpress». Regresjonsestimatet ($\beta_1$ = 0.25) representerer prediksjonsmodellens stigningstall. Det forteller oss at for hver kilo en utøver øker sin maksimale styrke i «legpress», forventes det en gjennomsnittlig økning på 0.25 kg i «legext» for dette utvalget.
 
 ```{r}
-#| fig-cap: "Modellen viser en sterk og signifikant sammenheng mellom øvelsene. Dette vises med en p-verdi < 0.001."
+#| fig-cap: "Modellen viser en sterk og signifikant sammenheng mellom øvelsene. Dette vises med en p-verdi < 0.001. Mørkere prikker i figuren visualiserer flere data i samme område"
 #| out-width: "80%"
 #| fig-align: "center" 
 
@@ -226,12 +221,7 @@ figur_2_1 <- ggplot(strengthvolume_pred, aes(legpress, legext)) +
   labs(title = "Prediksjonsmodell av Leg Extension basert på Leg Press",
        subtitle = "Data fra Hammarström et al. (2020)", 
        x = "Leg Press",
-       y = "Leg Extension") + 
-  
-  annotate("text", 
-    label = paste0("y = ", round(b0_2_1, 2), " + ", round(b1_2_1, 4), " * x"),
-    x = 250, y = 150) +
-  theme_minimal()
+       y = "Leg Extension")
 
 #kjør figuren
 print(figur_2_1)
@@ -245,7 +235,7 @@ $$y \sim \text{Normal}(\mu, \sigma)$$ $$\mu = \beta_0 + \beta_1 x$$
 
 Basert på den statistiske analysen av dette spesifikke utvalget, ble følgende estimerte regresjonsformel formet:
 
-$$\text{gjennomsnittlig legext} = 28.94 + 0.23 \cdot \text{legpress}$$
+$$\mu = 28.94 + 0.23 \cdot \text{legpress}$$
 
 Skjæringspunktet ($\beta_0$ = 28.94) angir den teoretiske startverdien i «legext» ved post-testen for gruppen som trente ett sett, dersom styrken i «legpress» hadde vært 0 kg. Regresjonsestimatet ($\beta_1$ = 0.23) representerer modellens stigningstall. Det forteller at for hver kilo utøverne i denne gruppen øker i «legpress» ved endt intervensjon, forventes en gjennomsnittlig økning på 0.23 kg i «legext». Modellen viser en sterk og statistisk signifikant sammenheng mellom øvelsene, bekreftet av en lav *p*-verdi (*p* \< 0.001).
 
@@ -289,15 +279,15 @@ Modellen utvides fra en enkel til en multippel lineær regresjonsmodell, dette e
 
 Dersom vi antar at økning i styrke er lik på tvers av kjønn - det vil at begge kjønn øker like mye i «legext» per kilo «legpress» - kan følgende formel brukes:
 
-$$\text{gjennomsnittlig legext} = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot sex$$
+$$\mu = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot sex$$
 
-Kvinnenes regresjonslinje (sex = 0) følger formelen: $\text{gjennomsnittlig legext} = \beta_0 + \beta_2 + \beta_1 \cdot \text{legpress}$. Skjæringspunktet $\beta_0$ viser hvor kvinnenes linje starter på y – aksen.
+Kvinnenes regresjonslinje (sex = 0) følger formelen: $\mu = \beta_0 + \beta_2 + \beta_1 \cdot \text{legpress}$. Skjæringspunktet $\beta_0$ viser hvor kvinnenes linje starter på y – aksen.
 
-Mennenes regresjonslinje (sex = 1) følger formelen: $\text{gjennomsnittlig legext} = (\beta_0 + \beta_2) + \beta_1 \cdot \text{legpress}$. Estimatet ($\beta_2$) viser den faste, gjennomsnittlige avstanden mellom de to linjene.
+Mennenes regresjonslinje (sex = 1) følger formelen: $\mu = (\beta_0 + \beta_2) + \beta_1 \cdot \text{legpress}$. Estimatet ($\beta_2$) viser den faste, gjennomsnittlige avstanden mellom de to linjene.
 
 Regresjonsmodellen ga følgende estimerte formel:
 
-$$\text{gjennomsnittlig legext} = 37.54 + 0.15 \cdot \text{legpress} + 21.86 \cdot \text{sex}$$
+$$\mu = 37.54 + 0.15 \cdot \text{legpress} + 21.86 \cdot \text{sex}$$
 
 ```{r}
 #| out-width: "60%"
@@ -343,11 +333,15 @@ print(figur_2_3a)
 
 Dersom det tas høyde for at kvinner og menn har ulike stigningstall, det vil si at treningseffekten er forskjellig mellom kjønnene, legges det til et interaksjonsledd i formelen.
 
-$$\text{gjennomsnittlig legext} = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot \text{sex} + \beta_3 \cdot (\text{legpress} \cdot \text{sex})$$
+$$\mu = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot \text{sex} + \beta_3 \cdot (\text{legpress} \cdot \text{sex})$$
 
-Kvinnenes regresjonslinje (sex = 0) følger fremdeles formelen $\text{gjennomsnittlig legext} = \beta_0 + \beta_2 + \beta_1 \cdot \text{legpress}$. Effekten av «legpress» hos kvinner er det rene estimatet $\beta_1$ (stigningstall).
+Kvinnenes regresjonslinje (sex = 0) følger fremdeles formelen $\mu = \beta_0 + \beta_1 \cdot \text{legpress}$. Effekten av «legpress» hos kvinner er det rene estimatet $\beta_1$ (stigningstall).
 
 Siden mennene er satt som sammenligningsgruppe (sex = 1), blir alle leddene i formelen aktivert. Med andre ord vil effekten av «legpress» hos menn bli summen av kvinnenes effekt og interaksjonsleddet.
+
+Regresjonsmodellen ga følgende estimerte formel:
+
+$$\mu = 37.31 + 0.15 \cdot \text{legpress} + 22.30 \cdot \text{sex} - 0.002 \cdot (\text{legpress} \cdot \text{sex})$$
 
 ```{r}
 #| out-width: "60%"
@@ -360,6 +354,8 @@ library(tidyverse)
 
 # Kjør regresjonsmodellen med høyde for ulike stigningstall mellom kjønn
 pred_mod_innad <- lm(legext ~ legpress * sex, data = strengthvolume_filt)
+
+opps_2_3b <- summary(pred_mod_innad)
 
 # Lag spredningsdiagram med regresjonslinjer med kjønnsfordelt stigning
 figur_2_3b <- ggplot(strengthvolume_filt, aes(legpress, legext, color = sex)) + 
@@ -394,9 +390,9 @@ print(figur_2_3b)
 
 Oppgaven tar utgangspunkt i modellen fra oppgave 2.3:
 
-$$\text{gjennomsnittlig legext} = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot \text{sex} + \beta_3 \cdot (\text{legpress} \cdot \text{sex})$$
+$$\mu = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot \text{sex} + \beta_3 \cdot (\text{legpress} \cdot \text{sex})$$
 
-La oss si at en mann tar 150 kg i legpress. For denne verdien gir modellen et punktestimat, også kalt et gjennomsnittsestimat. I eksempelet gir modellen en estimert «legext»-verdi på 81.97 kg. Siden enkeltpersoner varierer naturlig, kan det være nyttig og naturlig å finne et område som man forventer at nye, individuelle observasjoner havner innenfor – et såkalt prediksjonsintervall. Man kan da med 95% sikkerhet si at vi forventer at en ny, enkeltstående person havner innenfor intervallet. I eksempelet med den gitte verdien på legpress, vil man få en legext-verdi som ligger i området mellom 51.43 kg og 112.51 kg. Dette intervallet er relativt bredt fordi det tar høyde for både usikkerheten i selve regresjonsmodellen og den naturlige variasjonen (residualene) som eksisterer mellom enkeltpersoner innad i populasjonen.
+La oss si at en mann tar 150 kg i "legpress". For denne verdien gir modellen et punktestimat, også kalt et gjennomsnittsestimat, og i eksempelet gir modellen en estimert «legext»-verdi på 81.97 kg. Siden enkeltpersoner varierer naturlig, kan det være nyttig og naturlig å finne et område som man forventer at nye, individuelle observasjoner havner innenfor – et såkalt prediksjonsintervall. Man kan da med 95% sikkerhet si at vi forventer at en ny, enkeltstående person havner innenfor intervallet. I eksempelet med den gitte verdien på legpress, vil man få en legext-verdi som ligger i området mellom 51.43 kg og 112.51 kg. Dette intervallet er relativt bredt fordi det tar høyde for både usikkerheten i selve regresjonsmodellen og den naturlige variasjonen (residualene) som eksisterer mellom enkeltpersoner innad i populasjonen.
 
 ```{r}
 library(tidyverse)
@@ -413,13 +409,13 @@ pred_intervall <- predict(pred_mod_innad, newdata = ny_person, interval = "predi
 
 ### Oppgave 3.1: Endring
 
-Velger å gjøre en lineær regresjon med sett som en uavhengig kategorisk variabel og endringen i styrke som en avhengig kontinuerlig variabel. Dette gjør det mulig å se på hvilken måte antall sett påvirker endringen i muskelstyrke før og etter treningsintervensjonen, og vil produsere et direkte estimat på forskjellen i gjennomsnittlig styrkeøkning mellom treningsvolumene.
+For å løse oppgaven har jeg valgt å gjøre en lineær regresjon med "sett" som en uavhengig kategorisk variabel og endringen i styrke som en avhengig kontinuerlig variabel. Dette gjør det mulig å se på hvilken måte antall sett påvirker endringen i muskelstyrke før og etter treningsintervensjonen, og det vil produsere et direkte estimat på forskjellen i gjennomsnittlig styrkeøkning mellom treningsvolumene.
 
 Datasettet ble filtrert på øvelsen «legext» og tidspunktene «pre» og «post», og videre ble datasettet omgjort til et bredt format hvor de to tidspunktene ble tildelt egne kolonner med sine respektive verdier for hver deltaker. Det ble på den måten mulig å beregne den faktiske endringen mellom tidspunktene, som utgjorde den nye kontinuerlige variabelen.
 
 Resultatene ga følgende estimerte regresjonsmodell:
 
-$$\text{gjennomsnittlig endring i muskelstyrke} = 32.21 - 3.65 \cdot \text{sett}$$
+$$\mu = 32.21 - 3.65 \cdot \text{sett}$$
 
 Dataene er presentert som et boksplot. Hvit diamant viser gjennomsnittlig endring i styrke for de respektive gruppene, og visuelt kan man se at forskjellen i høyde viser forskjellen mellom gruppene. Konstanten ($\beta_0$ = 32.21) viser at gruppen som trente flere sett (multiple = 0) hadde en gjennomsnittlig økning på 32.21 kg. Regresjonsestimatet ($\beta_1$ = -3.65) viser at gruppen som trente ett sett (single = 1) hadde en mindre gjennomsnittlig økning.
 
@@ -468,6 +464,6 @@ Standardfeilen måler usikkerheten i estimatene. Modellen har en høy standardfe
 
 {{< pagebreak >}}
 
-## Vedlegg 
+## Vedlegg
 
 Github-lenke:
