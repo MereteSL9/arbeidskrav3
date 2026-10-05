@@ -182,7 +182,7 @@ print(figur_1_3)
 
 ### Oppgave 2.1: Prediksjonsmodell med fullt datasett
 
-Datasettet ble først filtrert til et bredt format der øvelsene «legpress» og «legext» ble tildelt hver sin kolonne, mens øvrige øvelser ble ekskludert fra datamaterialet. Prediksjonsmodellen tilsvarende struktur som tidligere:
+Datasettet ble først filtrert til et bredt format der øvelsene «legpress» og «legext» ble tildelt hver sin kolonne, mens øvrige øvelser ble ekskludert fra datamaterialet. Prediksjonsmodellen følger tilsvarende struktur som tidligere:
 
 $$y \sim \text{Normal}(\mu, \sigma)$$ $$\mu = \beta_0 + \beta_1 x$$
 
@@ -287,7 +287,7 @@ Mennenes regresjonslinje (sex = 1) følger formelen: $\mu = (\beta_0 + \beta_2) 
 
 Regresjonsmodellen ga følgende estimerte formel:
 
-$$\mu = 37.54 + 0.15 \cdot \text{legpress} + 21.86 \cdot \text{sex}$$
+$$\mu = 37.536 + 0.149 \cdot \text{legpress} + 21.857 \cdot \text{sex}$$
 
 ```{r}
 #| out-width: "60%"
@@ -341,7 +341,7 @@ Siden mennene er satt som sammenligningsgruppe (sex = 1), blir alle leddene i fo
 
 Regresjonsmodellen ga følgende estimerte formel:
 
-$$\mu = 37.31 + 0.15 \cdot \text{legpress} + 22.30 \cdot \text{sex} - 0.002 \cdot (\text{legpress} \cdot \text{sex})$$
+$$\mu = 37.306 + 0.151 \cdot \text{legpress} + 22.299 \cdot \text{sex} - 0.002 \cdot (\text{legpress} \cdot \text{sex})$$
 
 ```{r}
 #| out-width: "60%"
@@ -390,7 +390,7 @@ print(figur_2_3b)
 
 Oppgaven tar utgangspunkt i modellen fra oppgave 2.3:
 
-$$\mu = \beta_0 + \beta_1 \cdot \text{legpress} + \beta_2 \cdot \text{sex} + \beta_3 \cdot (\text{legpress} \cdot \text{sex})$$
+$$\mu = 37.306 + 0.151 \cdot \text{legpress} + 22.299 \cdot \text{sex} - 0.002 \cdot (\text{legpress} \cdot \text{sex})$$
 
 La oss si at en mann tar 150 kg i "legpress". For denne verdien gir modellen et punktestimat, også kalt et gjennomsnittsestimat, og i eksempelet gir modellen en estimert «legext»-verdi på 81.97 kg. Siden enkeltpersoner varierer naturlig, kan det være nyttig og naturlig å finne et område som man forventer at nye, individuelle observasjoner havner innenfor – et såkalt prediksjonsintervall. Man kan da med 95% sikkerhet si at vi forventer at en ny, enkeltstående person havner innenfor intervallet. I eksempelet med den gitte verdien på legpress, vil man få en legext-verdi som ligger i området mellom 51.43 kg og 112.51 kg. Dette intervallet er relativt bredt fordi det tar høyde for både usikkerheten i selve regresjonsmodellen og den naturlige variasjonen (residualene) som eksisterer mellom enkeltpersoner innad i populasjonen.
 
@@ -467,6 +467,14 @@ Standardfeilen måler usikkerheten i estimatene. Modellen har en høy standardfe
 ## Referanser
 
 All bakgrunnteori og statistiske definisjoner i oppgaven er hentet fra og basert på publiserte emnenotater fra emnet IDR4000 Kvantitativ metode og statistikk. Datasettene *hypertrophy* og *strengthvolume* er utlevert i emnet.
+
+Hammarström, D., et al. (2020). *"Benefits of higher resistance-training volume are related to ribosome biogenesis."* The Journal of Physiology 598(3): 543-565.
+
+Hammarström, D. (2026). *Quantitative methods and statistics with examples in R, Jamovi and JASP* \[Emnenotater\]. Canvas. Universitetet i Innlandet. <http://dhammarstrom.github.io/quant-methods>
+
+Haun, C. T., et al. (2018). *"Effects of Graded Whey Supplementation During Extreme-Volume Resistance Training."* Front Nutr 5: 84.
+
+Haun, C. T., et al. (2019). *"Pre-training Skeletal Muscle Fiber Size and Predominant Fiber Type Best Predict Hypertrophic Responses to 6 Weeks of Resistance Training in Previously Trained Young Men."* Front Physiol 10(297).
 
 {{< pagebreak >}}
 
